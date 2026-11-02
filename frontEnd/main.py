@@ -1,6 +1,5 @@
-import re
-import tkinter as tk
 import customtkinter as ctk
+from pantalla_venta import pantallaVenta
 
 ctk.set_appearance_mode("Light")
 ctk.set_default_color_theme("blue")
@@ -14,12 +13,12 @@ class mainApp(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.geometry("1050x580")
+        self.geometry("1050x700")
         self.title("Sistema POS")
         self.resizable(False, False)
 
         self.pantallaActual = None
-        self.cambiarPantalla(pantallaLogin)
+        self.cambiarPantalla(pantallaVenta)
 
     def cambiarPantalla(self, clasePantalla):
         if self.pantallaActual is not None:
