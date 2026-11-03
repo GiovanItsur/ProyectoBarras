@@ -1,0 +1,58 @@
+Create database punto_venta;
+use punto_venta;
+CREATE TABLE productos (
+    id_producto INT AUTO_INCREMENT PRIMARY KEY,
+    codigo_barras VARCHAR(20) UNIQUE NULL, 
+    descripcion VARCHAR(150) NOT NULL,
+    precio DECIMAL(10, 2) NOT NULL,
+    stock INT NOT NULL,
+    CONSTRAINT chk_stock_positivo CHECK (stock >= 0)
+);
+CREATE TABLE ventas (
+    folio INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    empleado VARCHAR(100) NOT NULL,
+    subtotal DECIMAL(10, 2) NOT NULL,
+    iva DECIMAL(10, 2) NOT NULL,
+    total DECIMAL(10, 2) NOT NULL
+);
+CREATE TABLE detalles_venta (
+    id_detalle INT AUTO_INCREMENT PRIMARY KEY,
+    folio_venta INT NOT NULL,
+    id_producto INT NOT NULL, 
+    cantidad INT NOT NULL,
+    precio DECIMAL(10, 2) NOT NULL,
+    importe DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT fk_venta FOREIGN KEY (folio_venta) REFERENCES ventas(folio) ON DELETE CASCADE,
+    CONSTRAINT fk_producto FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
+);
+INSERT INTO productos VALUES
+(null,'7622202825682', 'COCA 600', 23.00, 50),
+(null,'7501295600614', 'DORITOS', 20.00, 30),
+(null,'7500810049686', 'GALLETAS MARÍAS', 18.50, 25),
+(null,'7622210595416', 'Clorets', 12.00, 50),
+(null,'7508310245041', 'Hojas', 85.00, 30),
+(null,'7501742138264', 'Libreta', 45.00, 40),
+(null,'7500810049686', 'Tartinas', 18.00, 35),
+(null,'7501030418399', 'Donas', 22.00, 25),
+(null,'7501086801121', 'Agua epura', 15.00, 60),
+(null,'7502212175963', 'Carpeta', 35.00, 20),
+(null,'7501015213551', 'Marcatexto', 18.50, 45),
+(null,'6922723252983', 'Marcador', 25.00, 40),
+(null,'3154147490747', 'Pincel', 16.00, 30),
+(null,'7501030683469', 'Lapicero', 10.00, 80),
+(null,'7501015213162', 'Borrador', 8.00, 70),
+(null,'7501214980377', 'Corrector', 20.00, 35),
+(null,'3154148517214', 'Lapiz', 7.50, 90),
+(null,'72067153715', 'Pegamento', 24.00, 40)
+ON DUPLICATE KEY UPDATE 
+    descripcion = VALUES(descripcion),
+    precio = VALUES(precio),
+    stock = VALUES(stock);
+    
+select * from productos;
+
+GRANT SELECT, UPDATE, DELETE, INSERT ON punto_venta.detalles_venta TO 'Admin'@'%';
+GRANT SELECT, UPDATE, DELETE, INSERT ON punto_venta.productos TO 'Admin'@'%';
+GRANT SELECT, UPDATE, DELETE, INSERT ON punto_venta.ventas TO 'Admin'@'%';
+FLUSH PRIVILEGES;
